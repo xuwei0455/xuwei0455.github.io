@@ -78,7 +78,7 @@ theme: next
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
-  type: git
+- type: git
   repo: https://github.com/xuwei0455/xuwei0455.github.io.git
   branch: master
 

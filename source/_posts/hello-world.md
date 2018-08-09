@@ -1,5 +1,6 @@
 ---
 title: Hexo 教程
+date: 2017-11-11 11:11:11
 tags:
     - Hexo
 categories:

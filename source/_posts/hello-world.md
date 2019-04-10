@@ -45,3 +45,15 @@ $ hexo deploy
 ```
 
 详细信息: [Deployment](https://hexo.io/docs/deployment.html)
+
+## 部署方案
+
+这里利用不用的git分支，将MarkDown的源文件和生成的静态资源都发布到github。
+
+具体做法是：
+
+1. 将源文件保存在hexo分支
+2. 将生成的静态资源放在master分支
+3. 在写完文章后，可以使用`hexo server`来预览效果，确认没问题后，直接使用
+`hexo generate` && `hexo deploy` 来部署到github，最后`git add` &&
+`commit` && `push` 来保存源文件

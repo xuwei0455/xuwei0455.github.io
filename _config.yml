@@ -82,4 +82,13 @@ deploy:
   repo: https://github.com/xuwei0455/xuwei0455.github.io.git
   branch: master
 
-
+marked:
+  gfm: true
+  pedantic: false
+  sanitize: false
+  tables: true
+  breaks: false
+  smartLists: true
+  smartypants: true
+  modifyAnchors: ''
+  autolink: true

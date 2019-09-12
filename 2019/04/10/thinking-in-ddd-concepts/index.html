@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.4.0" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.4.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.4.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.4.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.4.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '6.4.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="DDD（Domain-Driven Design，领域驱动设计）是一种软件的设计方法，最近因为工作上 的需要，为了能设计出更清晰、更合理的软件结构，读了一些网上关于DDD的文章，但发现 一些概念理解起来比较的困难。 一番搜索后发现了一篇阿里盒马架构总监——张群辉——的技术文章， 对我理解DDD的一些概念有很大的帮助，这里写一下我个人认为难以理解，或者容易产生误区 的一些概念理解。 Data Mod">
+<meta name="keywords" content="DDD">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DDD的一些概念">
+<meta property="og:url" content="https://xuwei0455.github.io/2019/04/10/thinking-in-ddd-concepts/index.html">
+<meta property="og:site_name" content="William’s Conner">
+<meta property="og:description" content="DDD（Domain-Driven Design，领域驱动设计）是一种软件的设计方法，最近因为工作上 的需要，为了能设计出更清晰、更合理的软件结构，读了一些网上关于DDD的文章，但发现 一些概念理解起来比较的困难。 一番搜索后发现了一篇阿里盒马架构总监——张群辉——的技术文章， 对我理解DDD的一些概念有很大的帮助，这里写一下我个人认为难以理解，或者容易产生误区 的一些概念理解。 Data Mod">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-09-12T08:55:53.447Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="DDD的一些概念">
+<meta name="twitter:description" content="DDD（Domain-Driven Design，领域驱动设计）是一种软件的设计方法，最近因为工作上 的需要，为了能设计出更清晰、更合理的软件结构，读了一些网上关于DDD的文章，但发现 一些概念理解起来比较的困难。 一番搜索后发现了一篇阿里盒马架构总监——张群辉——的技术文章， 对我理解DDD的一些概念有很大的帮助，这里写一下我个人认为难以理解，或者容易产生误区 的一些概念理解。 Data Mod">
+
+
+
+
+
+
+  <link rel="canonical" href="https://xuwei0455.github.io/2019/04/10/thinking-in-ddd-concepts/">
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>DDD的一些概念 | William’s Conner</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">William’s Conner</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">Some experiences and feelings</p>
+      
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>Tags</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br>Categories</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://xuwei0455.github.io/2019/04/10/thinking-in-ddd-concepts/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="William">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="https://avatars2.githubusercontent.com/u/12061884">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="William’s Conner">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">DDD的一些概念
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+
+              
+                
+              
+
+              <time title="Created: 2019-04-10 10:46:45" itemprop="dateCreated datePublished" datetime="2019-04-10T10:46:45+08:00">2019-04-10</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">Edited on</span>
+                
+                <time title="Modified: 2019-09-12 16:55:53" itemprop="dateModified" datetime="2019-09-12T16:55:53+08:00">2019-09-12</time>
+              
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/04/10/thinking-in-ddd-concepts/#comments" itemprop="discussionUrl">
+                
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/04/10/thinking-in-ddd-concepts/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>DDD（Domain-Driven Design，领域驱动设计）是一种软件的设计方法，最近因为工作上
+的需要，为了能设计出更清晰、更合理的软件结构，读了一些网上关于DDD的文章，但发现
+一些概念理解起来比较的困难。</p>
+<p>一番搜索后发现了一篇阿里盒马架构总监——张群辉——的<a href="https://www.infoq.cn/article/alibaba-freshhema-ddd-practice" target="_blank" rel="noopener">技术文章</a>，
+对我理解DDD的一些概念有很大的帮助，这里写一下我个人认为难以理解，或者容易产生误区
+的一些概念理解。</p>
+<h3 id="Data-Modeling-amp-amp-Object-Modeling"><a href="#Data-Modeling-amp-amp-Object-Modeling" class="headerlink" title="Data Modeling &amp;&amp; Object Modeling"></a>Data Modeling &amp;&amp; Object Modeling</h3><p>在大多数人的设计方案里，其实只有Data Modeling这一种设计方案，其实这个可以从程序的
+发展历史上找到一些原因，但很显然我的水平还没到这个地步，暂时留个坑，以后慢慢填..</p>
+<p>那么现在来说什么是Data Modeling, 什么是Object Modeling。</p>
+<p>我其实更喜欢称呼为面向模型(Model-Oriented)，面向对象(Object-Oriented)的设计方法。</p>
+<p>面向模型就是我们熟悉的先设计存储结构，然后根据存储结构映射为类的设计，最后基于此完成
+整个程序的设计。</p>
+<p>面向对象是先有业务，有分清楚不同的业务之间的实例是什么，根据这些划分好各自的域，然后
+再去设计存储。</p>
+<p>套用耶稣的一句话就是</p>
+<blockquote>
+<p>让凯撒的归凯撒，让上帝的归上帝</p>
+</blockquote>
+<p>即程序中的类负责处理好业务的逻辑，而Model就只是纯粹的存储。</p>
+<p>也可以理解为面向对象是从上至下的设计方法，而面向模型是从下至上的设计方法。</p>
+<p>个人认为从上至下的设计方法的好处是让业务更清晰，更加趋向于世界本来的样子，而不是
+基于程序员的思路。</p>
+<h3 id="领域模型：失血、贫血、充血"><a href="#领域模型：失血、贫血、充血" class="headerlink" title="领域模型：失血、贫血、充血"></a>领域模型：失血、贫血、充血</h3><p>这里不具体讨论各个模型是什么样的，具体可以参考群辉大神的<a href="https://www.infoq.cn/article/alibaba-freshhema-ddd-practice" target="_blank" rel="noopener">文章</a>，
+里面已经写得非常的好了。</p>
+<p>这些名词其实是对Object的设计方案的一个描述，这个是建立在面向对象的基础上的。</p>
+<p>主要就是考虑怎么样去设计一个类，使它能够更加清楚的表达业务，同时从程序员的角度来讲，
+更容易一眼就明白这东西是怎么工作的。</p>
+<p>所以群辉大神从以下三个角度来进行了分析：</p>
+<ol>
+<li>类的表达力，是否除了拥有本身的数据外，是否可以表达行为，是否可以表达与其他类的关系</li>
+<li>如何使用语言特性写出清晰的类，依赖注入解决与依赖类的耦合，工厂模式实例化时无法直接注入依赖</li>
+<li>测试的友好程度，没有持久化的类对测试友好，有持久化的类可以显示表达依赖，方便Mock</li>
+</ol>
+<h3 id="DDD的使用范围"><a href="#DDD的使用范围" class="headerlink" title="DDD的使用范围"></a>DDD的使用范围</h3><blockquote>
+<p>没有银弹</p>
+</blockquote>
+<p>讨论使用范围的原因很简单，就是因为软件领域里面没有能够一劳永逸的方法。</p>
+<p>DDD也是如此，领域模型是为了解决业务的复杂性和边界的。防止业务代码爆炸式的增长——就像
+添加了高效的发泡剂一般。</p>
+<p>由于按DDD的设计思路，并不会考虑数据的存储效率，因为其实可以认为DDD就是在忽略持久化
+存储的情况下设计出来的，所以除了get_by_id这一类的查询，其他的复杂查询并不适用于
+DDD。</p>
+<p>至于复杂的查询应该怎么去做（群辉大神推荐直接绕过domain，这当然是个方法，但我觉得
+这里应该是个大坑，大有可写..），同理，挖个坑先..</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/DDD/" rel="tag"># DDD</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/12/02/project-analysis-program/" rel="next" title="单词使用频度分析工具">
+                <i class="fa fa-chevron-left"></i> 单词使用频度分析工具
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="https://avatars2.githubusercontent.com/u/12061884" alt="William">
+            
+              <p class="site-author-name" itemprop="name">William</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">5</span>
+                    <span class="site-state-item-name">posts</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">4</span>
+                    <span class="site-state-item-name">categories</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">5</span>
+                    <span class="site-state-item-name">tags</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/xuwei0455" target="_blank" title="GitHub"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="mailto:xuwei0455@gmail.com" target="_blank" title="E-Mail"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Data-Modeling-amp-amp-Object-Modeling"><span class="nav-number">1.</span> <span class="nav-text">Data Modeling &amp;&amp; Object Modeling</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#领域模型：失血、贫血、充血"><span class="nav-number">2.</span> <span class="nav-text">领域模型：失血、贫血、充血</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DDD的使用范围"><span class="nav-number">3.</span> <span class="nav-text">DDD的使用范围</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">William</span>
+
+  
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme – <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Gemini</a> v6.4.0</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+	
+    
+
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.4.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.4.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.4.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.4.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.4.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.4.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.4.0"></script>
+
+
+
+  
+
+  
+    <script id="dsq-count-scr" src="https://william-hsu.disqus.com/count.js" async></script>
+  
+
+  
+    <script type="text/javascript">
+      var disqus_config = function () {
+        this.page.url = 'https://xuwei0455.github.io/2019/04/10/thinking-in-ddd-concepts/';
+        this.page.identifier = '2019/04/10/thinking-in-ddd-concepts/';
+        this.page.title = 'DDD的一些概念';
+        };
+      function loadComments () {
+        var d = document, s = d.createElement('script');
+        s.src = 'https://william-hsu.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      }
+      
+        $(function () {
+          var offsetTop = $('#comments').offset().top - $(window).height();
+          if (offsetTop <= 0) {
+            // load directly when there's no a scrollbar
+            loadComments();
+          } else {
+            $(window).on('scroll.disqus_scroll', function () {
+              var scrollTop = document.documentElement.scrollTop;
+              if (scrollTop >= offsetTop) {
+                $(window).off('.disqus_scroll');
+                loadComments();
+              }
+            });
+          }
+        });
+      
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
